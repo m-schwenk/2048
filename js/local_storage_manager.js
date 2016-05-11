@@ -21,6 +21,7 @@ window.fakeStorage = {
 function LocalStorageManager() {
   this.bestScoreKey     = "bestScore";
   this.gameStateKey     = "gameState";
+  this.savedGameKey     = "savedGame";
 
   var supported = this.localStorageSupported();
   this.storage = supported ? window.localStorage : window.fakeStorage;
@@ -60,4 +61,14 @@ LocalStorageManager.prototype.setGameState = function (gameState) {
 
 LocalStorageManager.prototype.clearGameState = function () {
   this.storage.removeItem(this.gameStateKey);
+};
+
+// essentially a copy of the existing functionality but with a different (manual) updating frequency
+LocalStorageManager.prototype.saveGame = function (gameState) {
+  this.storage.setItem(this.savedGameKey, JSON.stringify(gameState));
+};
+
+LocalStorageManager.prototype.loadGame = function () {
+  var stateJSON = this.storage.getItem(this.savedGameKey);
+  return stateJSON ? JSON.parse(stateJSON) : null;
 };
